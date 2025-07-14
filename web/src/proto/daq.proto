@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package daq;
+
+// Data chunk message for streaming DAQ data
+message DataChunk {
+  bytes payload = 1;                    // Raw interleaved samples, little-endian
+  uint32 seq = 2;                      // Monotonic chunk counter
+  uint64 tick_ns = 3;                  // Start time (device clock)
+  map<string, string> tags = 4;        // Optional (e.g. mode, hwRev)
+}
+
+// Request message for data subscription
+message DataRequest {
+  uint32 channels = 1;                 // Number of channels to stream
+  uint32 sample_rate = 2;              // Samples per second per channel
+  uint32 buffer_size = 3;              // Buffer size in samples
+  map<string, string> config = 4;      // Additional configuration
+}
+
+// Control command message
+message ControlCmd {
+  enum Command {
+    START = 0;
+    STOP = 1;
+    PAUSE = 2;
+    RESUME = 3;
+    RESET = 4;
+  }
+  Command cmd = 1;
+  map<string, string> params = 2;
+}
+
+// Acknowledgment message
+message Ack {
+  bool success = 1;
+  string message = 2;
+  uint64 timestamp = 3;
+}
+
+// DAQ streaming service
+service DAQStream {
+  rpc Subscribe(DataRequest) returns (stream DataChunk);
+  rpc Control(ControlCmd) returns (Ack);
+}
