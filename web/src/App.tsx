@@ -7,6 +7,10 @@ import {
   MockConfig, 
   CARD_CONFIGS 
 } from './utils/mockDataGenerator';
+import { 
+  realDataService, 
+  mockConfigToRealConfig
+} from './services/realDataService';
 
 function App() {
   // State management
@@ -16,6 +20,8 @@ function App() {
   const [config, setConfig] = useState<MockConfig>(CARD_CONFIGS['PXIe-69846H']);
   const [dataRate, setDataRate] = useState(0);
   const [frameRate, setFrameRate] = useState(0);
+  const [useRealData, setUseRealData] = useState(false); // 数据源切换
+  const [connectionStatus, setConnectionStatus] = useState<string>('未连接');
   
   // Refs for performance tracking
   const streamerRef = useRef<HighPerformanceStreamer | null>(null);
@@ -46,49 +52,93 @@ function App() {
     };
   }, []);
 
-  // Data callback for streaming
+  // 优化的数据回调 - 减少状态更新频率
   const handleDataUpdate = useCallback((data: Float32Array[], metadata: any) => {
     setCurrentData(data);
-    setDataRate(metadata.bytesPerSecond / (1024 * 1024)); // Convert to MB/s
+    
+    // 使用增强的元数据中的实际数据率
+    const actualRate = metadata.actualDataRate || (metadata.bytesPerSecond / (1024 * 1024));
+    setDataRate(actualRate);
+    
     frameCountRef.current++;
   }, []);
 
   // Control handlers
-  const handleStart = useCallback(() => {
-    if (!streamerRef.current) {
-      // Create new streamer with current config
-      streamerRef.current = new HighPerformanceStreamer(config, 640); // Target 640 MB/s
+  const handleStart = useCallback(async () => {
+    try {
+      if (useRealData) {
+        // 使用真实数据服务
+        setConnectionStatus('连接中...');
+        const realConfig = mockConfigToRealConfig(config);
+        await realDataService.start(realConfig, handleDataUpdate);
+        setConnectionStatus('已连接');
+      } else {
+        // 使用模拟数据
+        if (!streamerRef.current) {
+          streamerRef.current = new HighPerformanceStreamer(config, 640);
+        }
+        streamerRef.current.start(handleDataUpdate);
+        setConnectionStatus('模拟模式');
+      }
+      
+      setIsStreaming(true);
+      setIsPaused(false);
+    } catch (error) {
+      console.error('启动失败:', error);
+      setConnectionStatus('连接失败');
     }
-    
-    streamerRef.current.start(handleDataUpdate);
-    setIsStreaming(true);
-    setIsPaused(false);
-  }, [config, handleDataUpdate]);
+  }, [config, handleDataUpdate, useRealData]);
 
-  const handleStop = useCallback(() => {
-    if (streamerRef.current) {
-      streamerRef.current.stop();
+  const handleStop = useCallback(async () => {
+    try {
+      if (useRealData) {
+        await realDataService.stop();
+      } else {
+        if (streamerRef.current) {
+          streamerRef.current.stop();
+        }
+      }
+      
+      setIsStreaming(false);
+      setIsPaused(false);
+      setCurrentData([]);
+      setDataRate(0);
+      frameCountRef.current = 0;
+      setConnectionStatus('未连接');
+    } catch (error) {
+      console.error('停止失败:', error);
     }
-    setIsStreaming(false);
-    setIsPaused(false);
-    setCurrentData([]);
-    setDataRate(0);
-    frameCountRef.current = 0;
-  }, []);
+  }, [useRealData]);
 
-  const handlePause = useCallback(() => {
-    if (streamerRef.current) {
-      streamerRef.current.stop();
+  const handlePause = useCallback(async () => {
+    try {
+      if (useRealData) {
+        await realDataService.pause();
+      } else {
+        if (streamerRef.current) {
+          streamerRef.current.stop();
+        }
+      }
+      setIsPaused(true);
+    } catch (error) {
+      console.error('暂停失败:', error);
     }
-    setIsPaused(true);
-  }, []);
+  }, [useRealData]);
 
-  const handleResume = useCallback(() => {
-    if (streamerRef.current) {
-      streamerRef.current.start(handleDataUpdate);
+  const handleResume = useCallback(async () => {
+    try {
+      if (useRealData) {
+        await realDataService.resume();
+      } else {
+        if (streamerRef.current) {
+          streamerRef.current.start(handleDataUpdate);
+        }
+      }
+      setIsPaused(false);
+    } catch (error) {
+      console.error('恢复失败:', error);
     }
-    setIsPaused(false);
-  }, [handleDataUpdate]);
+  }, [handleDataUpdate, useRealData]);
 
   const handleConfigChange = useCallback((newConfig: Partial<MockConfig>) => {
     const updatedConfig = { ...config, ...newConfig };
@@ -165,6 +215,9 @@ function App() {
           onCardSelect={handleCardSelect}
           dataRate={dataRate}
           frameRate={frameRate}
+          useRealData={useRealData}
+          connectionStatus={connectionStatus}
+          onDataSourceChange={setUseRealData}
         />
 
         <WaveformChart

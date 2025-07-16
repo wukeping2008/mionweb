@@ -1,0 +1,2 @@
+obj/Debug/net8.0/Daq.cs \
+obj/Debug/net8.0/DaqGrpc.cs: ../../web/src/proto/daq.proto

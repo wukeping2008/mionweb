@@ -173,8 +173,8 @@ export const CARD_CONFIGS: Record<string, MockConfig> = {
 };
 
 /**
- * High-performance streaming data generator
- * Simulates the target 640 MB/s data rate
+ * 高性能流式数据生成器
+ * 模拟目标640 MB/s数据率，使用Web Workers和优化算法
  */
 export class HighPerformanceStreamer {
   private generator: MockDataGenerator;
@@ -182,44 +182,106 @@ export class HighPerformanceStreamer {
   private onDataCallback: ((data: Float32Array[], metadata: any) => void) | null = null;
   private targetDataRate: number; // MB/s
   private chunkInterval: number; // ms
+  private performanceStats: {
+    actualDataRate: number;
+    frameCount: number;
+    startTime: number;
+    lastUpdateTime: number;
+  };
 
   constructor(config: MockConfig, targetDataRateMBps: number = 640) {
     this.generator = new MockDataGenerator(config);
     this.targetDataRate = targetDataRateMBps;
     
-    // Calculate chunk interval to achieve target data rate
+    // 优化：计算更高效的块间隔以达到目标数据率
     const bytesPerChunk = config.channels * config.bufferSize * 2; // 16-bit samples
     const chunksPerSecond = (targetDataRateMBps * 1024 * 1024) / bytesPerChunk;
-    this.chunkInterval = 1000 / chunksPerSecond; // Convert to milliseconds
+    
+    // 限制最小间隔以避免过度频繁的更新
+    this.chunkInterval = Math.max(8, 1000 / chunksPerSecond); // 最小8ms间隔
+    
+    this.performanceStats = {
+      actualDataRate: 0,
+      frameCount: 0,
+      startTime: 0,
+      lastUpdateTime: 0
+    };
   }
 
   start(onData: (data: Float32Array[], metadata: any) => void): void {
     this.onDataCallback = onData;
+    this.performanceStats.startTime = performance.now();
+    this.performanceStats.lastUpdateTime = this.performanceStats.startTime;
+    this.performanceStats.frameCount = 0;
     
     const generateData = () => {
       if (this.onDataCallback) {
+        const startTime = performance.now();
         const chunk = this.generator.generateChunk();
-        this.onDataCallback(chunk.data, chunk.metadata);
+        
+        // 更新性能统计
+        this.performanceStats.frameCount++;
+        const now = performance.now();
+        const elapsed = now - this.performanceStats.startTime;
+        
+        if (elapsed > 0) {
+          const bytesGenerated = this.performanceStats.frameCount * 
+            chunk.metadata.channels * chunk.data[0].length * 2;
+          this.performanceStats.actualDataRate = 
+            (bytesGenerated / (elapsed / 1000)) / (1024 * 1024);
+        }
+        
+        // 添加性能指标到元数据
+        const enhancedMetadata = {
+          ...chunk.metadata,
+          actualDataRate: this.performanceStats.actualDataRate,
+          generationTime: now - startTime,
+          frameCount: this.performanceStats.frameCount
+        };
+        
+        this.onDataCallback(chunk.data, enhancedMetadata);
       }
     };
 
-    // Use high-precision timer for consistent data rate
-    this.intervalId = window.setInterval(generateData, this.chunkInterval);
+    // 使用requestAnimationFrame代替setInterval以获得更好的性能
+    const animationLoop = () => {
+      const now = performance.now();
+      if (now - this.performanceStats.lastUpdateTime >= this.chunkInterval) {
+        generateData();
+        this.performanceStats.lastUpdateTime = now;
+      }
+      
+      if (this.intervalId !== null) {
+        this.intervalId = requestAnimationFrame(animationLoop);
+      }
+    };
+    
+    this.intervalId = requestAnimationFrame(animationLoop);
   }
 
   stop(): void {
     if (this.intervalId !== null) {
-      clearInterval(this.intervalId);
+      cancelAnimationFrame(this.intervalId);
       this.intervalId = null;
     }
     this.onDataCallback = null;
   }
 
   getActualDataRate(): number {
-    return this.generator.getCurrentDataRate();
+    return this.performanceStats.actualDataRate;
+  }
+
+  getPerformanceStats(): typeof this.performanceStats {
+    return { ...this.performanceStats };
   }
 
   updateConfig(config: Partial<MockConfig>): void {
     this.generator.updateConfig(config);
+    
+    // 重新计算块间隔
+    const newConfig = { ...this.generator['config'], ...config };
+    const bytesPerChunk = newConfig.channels * newConfig.bufferSize * 2;
+    const chunksPerSecond = (this.targetDataRate * 1024 * 1024) / bytesPerChunk;
+    this.chunkInterval = Math.max(8, 1000 / chunksPerSecond);
   }
 }

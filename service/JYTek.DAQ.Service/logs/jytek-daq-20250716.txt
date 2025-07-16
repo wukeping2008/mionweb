@@ -1,0 +1,38 @@
+2025-07-16 00:39:20.032 +08:00 [INF] DAQ Hub后台服务启动
+2025-07-16 00:39:20.077 +08:00 [INF] Now listening on: http://localhost:5000
+2025-07-16 00:39:20.077 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-16 00:39:20.077 +08:00 [INF] Hosting environment: Production
+2025-07-16 00:39:20.077 +08:00 [INF] Content root path: /Users/kepingwu/Desktop/jy5500-web-instrument/service/JYTek.DAQ.Service
+2025-07-16 00:48:25.221 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/health - null null
+2025-07-16 00:48:25.230 +08:00 [INF] Executing endpoint 'HTTP: GET /health'
+2025-07-16 00:48:25.234 +08:00 [INF] Executed endpoint 'HTTP: GET /health'
+2025-07-16 00:48:25.235 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/health - 200 null application/json; charset=utf-8 15.1919ms
+2025-07-16 00:48:33.504 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/metrics - null null
+2025-07-16 00:48:33.505 +08:00 [INF] Executing endpoint 'HTTP: GET /metrics'
+2025-07-16 00:48:33.516 +08:00 [INF] Executed endpoint 'HTTP: GET /metrics'
+2025-07-16 00:48:33.517 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/metrics - 200 null application/json; charset=utf-8 12.8615ms
+2025-07-16 09:19:34.584 +08:00 [INF] DAQ Hub后台服务启动
+2025-07-16 09:19:34.628 +08:00 [INF] Now listening on: http://localhost:5000
+2025-07-16 09:19:34.628 +08:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-07-16 09:19:34.628 +08:00 [INF] Hosting environment: Production
+2025-07-16 09:19:34.628 +08:00 [INF] Content root path: /Users/kepingwu/Desktop/jy5500-web-instrument/service/JYTek.DAQ.Service
+2025-07-16 09:28:26.362 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/daqhub - null null
+2025-07-16 09:28:26.366 +08:00 [INF] CORS policy execution failed.
+2025-07-16 09:28:26.366 +08:00 [INF] Request origin http://localhost:3001 does not have permission to access the resource.
+2025-07-16 09:28:26.376 +08:00 [INF] Executing endpoint '/daqhub'
+2025-07-16 09:28:26.389 +08:00 [INF] SignalR客户端连接: We4OpKdnqhEP2fRkgjseug, UserAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36
+2025-07-16 09:28:26.401 +08:00 [INF] 客户端 We4OpKdnqhEP2fRkgjseug 加入性能监控组
+2025-07-16 09:28:37.685 +08:00 [INF] SignalR客户端正常断开: We4OpKdnqhEP2fRkgjseug
+2025-07-16 09:28:37.693 +08:00 [INF] 已清除客户端 We4OpKdnqhEP2fRkgjseug 的性能指标
+2025-07-16 09:28:37.703 +08:00 [INF] Executed endpoint '/daqhub'
+2025-07-16 09:28:37.708 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/daqhub - 101 null null 11346.636ms
+2025-07-16 09:45:51.418 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/daqhub - null null
+2025-07-16 09:45:51.421 +08:00 [INF] CORS policy execution failed.
+2025-07-16 09:45:51.421 +08:00 [INF] Request origin http://localhost:3001 does not have permission to access the resource.
+2025-07-16 09:45:51.423 +08:00 [INF] Executing endpoint '/daqhub'
+2025-07-16 09:45:51.433 +08:00 [INF] SignalR客户端连接: 8o6Ex5m8Hw6MoorFWIuKaQ, UserAgent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Safari/605.1.15
+2025-07-16 09:45:51.435 +08:00 [INF] 客户端 8o6Ex5m8Hw6MoorFWIuKaQ 加入性能监控组
+2025-07-16 09:47:08.952 +08:00 [INF] SignalR客户端正常断开: 8o6Ex5m8Hw6MoorFWIuKaQ
+2025-07-16 09:47:08.952 +08:00 [INF] 已清除客户端 8o6Ex5m8Hw6MoorFWIuKaQ 的性能指标
+2025-07-16 09:47:08.953 +08:00 [INF] Executed endpoint '/daqhub'
+2025-07-16 09:47:08.953 +08:00 [INF] Request finished HTTP/1.1 GET http://localhost:5000/daqhub - 101 null null 77534.4387ms

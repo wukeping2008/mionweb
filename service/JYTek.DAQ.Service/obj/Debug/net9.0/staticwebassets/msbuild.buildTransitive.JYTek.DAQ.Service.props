@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="../buildMultiTargeting/JYTek.DAQ.Service.props" />
+</Project>

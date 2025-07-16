@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "IIigOtBBVefyj8IvsYZHaVS23oAbxuPUIbWI7CHPeYA=",
+  "Source": "JYTek.DAQ.Service",
+  "BasePath": "_content/JYTek.DAQ.Service",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

@@ -1,0 +1,96 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/kepingwu/Desktop/jy5500-web-instrument/service/JYTek.DAQ.Service/JYTek.DAQ.Service.csproj": {}
+  },
+  "projects": {
+    "/Users/kepingwu/Desktop/jy5500-web-instrument/service/JYTek.DAQ.Service/JYTek.DAQ.Service.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/kepingwu/Desktop/jy5500-web-instrument/service/JYTek.DAQ.Service/JYTek.DAQ.Service.csproj",
+        "projectName": "JYTek.DAQ.Service",
+        "projectPath": "/Users/kepingwu/Desktop/jy5500-web-instrument/service/JYTek.DAQ.Service/JYTek.DAQ.Service.csproj",
+        "packagesPath": "/Users/kepingwu/.nuget/packages/",
+        "outputPath": "/Users/kepingwu/Desktop/jy5500-web-instrument/service/JYTek.DAQ.Service/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/kepingwu/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.200"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Grpc.AspNetCore": {
+              "target": "Package",
+              "version": "[2.59.0, )"
+            },
+            "Grpc.AspNetCore.Web": {
+              "target": "Package",
+              "version": "[2.59.0, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[5.0.1, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
+            "System.Memory": {
+              "target": "Package",
+              "version": "[4.5.5, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.200/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

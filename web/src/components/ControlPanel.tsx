@@ -12,6 +12,9 @@ interface ControlPanelProps {
   onCardSelect: (cardType: string) => void;
   dataRate: number; // Current data rate in MB/s
   frameRate: number; // Current UI frame rate
+  useRealData?: boolean; // 数据源选择
+  connectionStatus?: string; // 连接状态
+  onDataSourceChange?: (useReal: boolean) => void; // 数据源切换回调
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -24,7 +27,10 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   onConfigChange,
   onCardSelect,
   dataRate,
-  frameRate
+  frameRate,
+  useRealData = false,
+  connectionStatus = '未连接',
+  onDataSourceChange
 }) => {
   const [selectedCard, setSelectedCard] = useState<string>('PXIe-69846H');
   const [isPaused, setIsPaused] = useState(false);
@@ -156,6 +162,50 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         >
           ⏹️ STOP
         </button>
+      </div>
+
+      {/* Data Source Selection */}
+      <div style={{
+        marginBottom: '20px',
+        padding: '15px',
+        backgroundColor: '#e3f2fd',
+        borderRadius: '5px',
+        border: '1px solid #2196f3'
+      }}>
+        <h4 style={{ margin: '0 0 10px 0', color: '#1976d2' }}>数据源选择</h4>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <input
+              type="radio"
+              name="dataSource"
+              checked={!useRealData}
+              onChange={() => onDataSourceChange?.(false)}
+              disabled={isStreaming}
+            />
+            <span>模拟数据 (Mock Data)</span>
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <input
+              type="radio"
+              name="dataSource"
+              checked={useRealData}
+              onChange={() => onDataSourceChange?.(true)}
+              disabled={isStreaming}
+            />
+            <span>真实数据 (Real Data)</span>
+          </label>
+          <div style={{
+            marginLeft: 'auto',
+            padding: '4px 12px',
+            backgroundColor: useRealData ? '#4caf50' : '#ff9800',
+            color: 'white',
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: 'bold'
+          }}>
+            {connectionStatus}
+          </div>
+        </div>
       </div>
 
       {/* Configuration Panel */}
